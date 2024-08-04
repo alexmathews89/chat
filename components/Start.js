@@ -7,11 +7,30 @@ import {
   TextInput,
   ImageBackground,
   TouchableOpacity,
+  Alert,
 } from "react-native";
+import { getAuth, signInAnonymously } from "firebase/auth";
 
 const Start = ({ navigation }) => {
   const [name, setName] = useState("");
   const [color, setColor] = useState("");
+  const auth = getAuth();
+
+  //Signs in user to Firebase
+  const signInUser = () => {
+    signInAnonymously(auth)
+      .then((result) => {
+        navigation.navigate("Chat", {
+          userID: result.user.uid,
+          name: name,
+          color: color,
+        });
+        Alert.alert("Signed in Successfully!");
+      })
+      .catch((error) => {
+        Alert.alert("Unable to sign in, try again later.");
+      });
+  };
 
   return (
     <View style={styles.container}>
@@ -50,12 +69,7 @@ const Start = ({ navigation }) => {
             ></TouchableOpacity>
           </View>
 
-          <TouchableOpacity
-            style={styles.button}
-            onPress={() =>
-              navigation.navigate("Chat", { name: name, color: color })
-            }
-          >
+          <TouchableOpacity style={styles.button} onPress={signInUser}>
             <Text style={styles.buttonText}>Start Chatting</Text>
           </TouchableOpacity>
         </View>
