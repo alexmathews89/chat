@@ -1,5 +1,5 @@
 import { StatusBar } from "expo-status-bar";
-import { StyleSheet, Text, View } from "react-native";
+import { StyleSheet, Text, View, Alert } from "react-native";
 import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { initializeApp } from "firebase/app";
@@ -13,6 +13,7 @@ import { useEffect } from "react";
 
 import Start from "./components/Start";
 import Chat from "./components/Chat";
+import { getStorage } from "firebase/storage";
 
 const Stack = createNativeStackNavigator();
 
@@ -32,6 +33,7 @@ const App = () => {
   // Initialize Cloud Firestore and get a reference to the service
 
   const db = getFirestore(app);
+  const storage = getStorage(app);
   const connectionStatus = useNetInfo();
 
   useEffect(() => {
@@ -52,6 +54,7 @@ const App = () => {
             <Chat
               isConnected={connectionStatus.isConnected}
               db={db}
+              storage={storage}
               {...props}
             />
           )}
